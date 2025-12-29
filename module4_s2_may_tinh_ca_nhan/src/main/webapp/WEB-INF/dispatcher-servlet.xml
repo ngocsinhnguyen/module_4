@@ -12,7 +12,7 @@
            http://www.springframework.org/schema/mvc/spring-mvc.xsd">
 
     <!-- Enable component scanning for controllers and services -->
-    <context:component-scan base-package="com.example.chuyen_doi_tien_te" />
+    <context:component-scan base-package="com.example.module4_s2_may_tinh_ca_nhan" />
 
     <!-- Enable Spring MVC annotations -->
     <mvc:annotation-driven />
