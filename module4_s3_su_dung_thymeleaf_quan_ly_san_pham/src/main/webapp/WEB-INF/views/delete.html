@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Xóa sản phẩm</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            background: #f0f2f5;
+            padding: 40px;
+        }
+
+        .delete-container {
+            max-width: 500px;
+            margin: auto;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        h2 {
+            color: #dc3545;
+        }
+
+        .product-info {
+            margin: 20px 0;
+            padding: 15px;
+            background: #fff5f5;
+            border: 1px solid #ffc9c9;
+            border-radius: 5px;
+        }
+
+        .btn-confirm {
+            padding: 10px 25px;
+            background: #dc3545;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-right: 10px;
+        }
+
+        .btn-cancel {
+            padding: 10px 25px;
+            background: #6c757d;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 16px;
+            display: inline-block;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="delete-container">
+        <h2>Xác nhận xóa sản phẩm?</h2>
+        <div class="product-info">
+            <p>Bạn có chắc chắn muốn xóa sản phẩm:</p>
+            <h3 th:text="${product.name}"></h3>
+            <p>Hành động này không thể hoàn tác.</p>
+        </div>
+        <form th:action="@{/product/remove}" method="post">
+            <input type="hidden" name="id" th:value="${product.id}">
+            <button type="submit" class="btn-confirm">Xóa ngay</button>
+            <a th:href="@{/product}" class="btn-cancel">Hủy bỏ</a>
+        </form>
+    </div>
+</body>
+
+</html>

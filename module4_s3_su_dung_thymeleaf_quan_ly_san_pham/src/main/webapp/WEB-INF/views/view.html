@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Chi tiết sản phẩm</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            background: #f0f2f5;
+            padding: 40px;
+        }
+
+        .view-container {
+            max-width: 600px;
+            margin: auto;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            text-align: center;
+            color: #333;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 10px;
+        }
+
+        .detail-row {
+            display: flex;
+            padding: 12px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .detail-label {
+            width: 150px;
+            font-weight: bold;
+            color: #666;
+        }
+
+        .detail-value {
+            flex: 1;
+            color: #333;
+        }
+
+        .back-btn {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 10px 20px;
+            background: #6c757d;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="view-container">
+        <h2>Chi tiết sản phẩm</h2>
+        <div class="detail-row">
+            <div class="detail-label">ID:</div>
+            <div class="detail-value" th:text="${product.id}"></div>
+        </div>
+        <div class="detail-row">
+            <div class="detail-label">Tên:</div>
+            <div class="detail-value" th:text="${product.name}"></div>
+        </div>
+        <div class="detail-row">
+            <div class="detail-label">Giá:</div>
+            <div class="detail-value"
+                th:text="${#numbers.formatDecimal(product.price, 0, 'COMMA', 0, 'POINT')} + ' VNĐ'"></div>
+        </div>
+        <div class="detail-row">
+            <div class="detail-label">Mô tả:</div>
+            <div class="detail-value" th:text="${product.description}"></div>
+        </div>
+        <div class="detail-row">
+            <div class="detail-label">Nhà sản xuất:</div>
+            <div class="detail-value" th:text="${product.producer}"></div>
+        </div>
+        <div style="text-align: center;">
+            <a th:href="@{/product}" class="back-btn">Quay lại danh sách</a>
+        </div>
+    </div>
+</body>
+
+</html>
