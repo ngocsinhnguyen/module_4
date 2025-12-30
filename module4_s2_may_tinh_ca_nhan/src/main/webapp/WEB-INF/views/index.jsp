@@ -52,10 +52,10 @@
                 <h1>Calculator</h1>
                 <form action="calculate" method="post">
                     <div class="input-group">
-                        <input type="number" step="any" name="num1"
-                            value="${calculator.num1 != null ? calculator.num1 : ''}" required>
-                        <input type="number" step="any" name="num2"
-                            value="${calculator.num2 != null ? calculator.num2 : ''}" required>
+                        <input type="text" name="num1"
+                            value="${num1 != null ? num1 : ''}" required>
+                        <input type="text" name="num2"
+                            value="${num2 != null ? num2 : ''}" required>
                     </div>
                     <div class="button-group">
                         <input type="submit" name="operator" value="Addition(+)">
@@ -65,16 +65,16 @@
                     </div>
                 </form>
 
-                <c:if test="${not empty calculator.result}">
+                <c:if test="${not empty result}">
                     <div class="result">
-                        Result ${calculator.operator.substring(calculator.operator.indexOf('(') + 1,
-                        calculator.operator.indexOf(')'))} : ${calculator.result}
+                        Result ${operator.substring(operator.indexOf('(') + 1,
+                        operator.indexOf(')'))} : ${result}
                     </div>
                 </c:if>
 
-                <c:if test="${not empty calculator.error}">
+                <c:if test="${not empty error}">
                     <div class="error">
-                        Error: ${calculator.error}
+                        Error: ${error}
                     </div>
                 </c:if>
             </div>
