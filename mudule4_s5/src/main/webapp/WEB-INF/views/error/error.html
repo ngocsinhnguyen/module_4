@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${errorCode} + ' - Oops!'">Error</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            text-align: center;
+            padding: 50px;
+            background-color: #f8f9fa;
+        }
+
+        .error-container {
+            max-width: 500px;
+            margin: auto;
+            background: white;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            font-size: 80px;
+            color: #e74c3c;
+            margin: 0;
+        }
+
+        h2 {
+            color: #2c3e50;
+        }
+
+        p {
+            font-size: 18px;
+            color: #7f8c8d;
+            margin-bottom: 30px;
+        }
+
+        .btn {
+            text-decoration: none;
+            background-color: #3498db;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="error-container">
+        <h1 th:text="${errorCode}">500</h1>
+        <h2 th:text="${errorTitle}">Đã xảy ra lỗi</h2>
+        <p th:text="${errorMessage}">Vui lòng thử lại sau hoặc quay về trang chủ.</p>
+        <a th:href="@{/products}" class="btn">Quay lại danh sách sản phẩm</a>
+    </div>
+</body>
+
+</html>

@@ -1,10 +1,30 @@
 package com.example.module4_s3_su_dung_thymeleaf_quan_ly_san_pham.model;
 
+import javax.persistence.*;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotEmpty;
+
+@Entity
+@Table(name = "products")
 public class Product {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+
+    @NotEmpty(message = "Tên không được để trống")
+    @Column(name = "name", nullable = false)
     private String name;
+
+    @Min(value = 0, message = "Giá không được nhỏ hơn 0")
+    @Column(name = "price", nullable = false)
     private double price;
+
+    @NotEmpty(message = "Mô tả không được để trống")
+    @Column(name = "description")
     private String description;
+
+    @NotEmpty(message = "Nhà sản xuất không được để trống")
+    @Column(name = "producer")
     private String producer;
 
     public Product() {
