@@ -13,20 +13,20 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(NoHandlerFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ModelAndView handle404() {
-        ModelAndView mav = new ModelAndView("error/error");
-        mav.addObject("errorCode", "404");
-        mav.addObject("errorTitle", "Trang không tồn tại");
-        mav.addObject("errorMessage", "Rất tiếc, đường dẫn bạn truy cập không tìm thấy dữ liệu.");
-        return mav;
+        return createErrorView("404", "Trang không tồn tại", "Rất tiếc, đường dẫn bạn truy cập không tìm thấy dữ liệu.");
     }
 
     @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ModelAndView handle500(Exception e) {
+        return createErrorView("500", "Lỗi hệ thống", "Đã xảy ra lỗi không mong muốn. Chi tiết: " + e.getMessage());
+    }
+
+    private ModelAndView createErrorView(String code, String title, String message) {
         ModelAndView mav = new ModelAndView("error/error");
-        mav.addObject("errorCode", "500");
-        mav.addObject("errorTitle", "Lỗi hệ thống");
-        mav.addObject("errorMessage", "Đã xảy ra lỗi không mong muốn. Chi tiết: " + e.getMessage());
+        mav.addObject("errorCode", code);
+        mav.addObject("errorTitle", title);
+        mav.addObject("errorMessage", message);
         return mav;
     }
 }

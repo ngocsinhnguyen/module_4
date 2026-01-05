@@ -57,6 +57,104 @@
             color: #e74c3c;
             font-weight: bold;
         }
+
+        /* Price Filter Dropdown Styles */
+        .price-filter {
+            position: relative;
+            display: inline-block;
+        }
+
+        #price-display {
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            background: white;
+            cursor: pointer;
+            min-width: 150px;
+            font-size: 14px;
+            color: #333;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        #price-display::after {
+            content: '▼';
+            font-size: 10px;
+            margin-left: 10px;
+            color: #7f8c8d;
+        }
+
+        .price-dropdown {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background-color: white;
+            min-width: 250px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+            padding: 15px;
+            z-index: 1000;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+            margin-top: 5px;
+        }
+
+        .price-dropdown.show {
+            display: block;
+        }
+
+        .price-inputs {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .input-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .input-group label {
+            font-size: 13px;
+            color: #666;
+            width: 50px;
+        }
+
+        .input-group input {
+            flex: 1;
+            padding: 6px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        .dropdown-actions {
+            margin-top: 15px;
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+
+        .btn-apply {
+            background-color: #3498db;
+            color: white;
+            padding: 5px 12px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 13px;
+        }
+
+        .btn-clear-inner {
+            background-color: #f1f1f1;
+            color: #666;
+            padding: 5px 12px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 13px;
+        }
     </style>
 </head>
 
@@ -74,13 +172,35 @@
                 style="background-color: #2ecc71; color: white; padding: 10px 20px; border-radius: 4px; text-decoration: none; font-weight: bold;">+
                 Thêm sản phẩm</a>
 
-            <form th:action="@{/products}" method="get" style="display: flex; gap: 10px;">
+            <form th:action="@{/products}" method="get" id="searchForm"
+                style="display: flex; gap: 10px; align-items: center;">
                 <input type="text" name="searchName" th:value="${searchName}" placeholder="Tìm theo tên..."
                     style="padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
-                <input type="number" name="minPrice" th:value="${minPrice}" placeholder="Giá từ..."
-                    style="padding: 8px; border: 1px solid #ddd; border-radius: 4px; width: 100px;">
-                <input type="number" name="maxPrice" th:value="${maxPrice}" placeholder="đến..."
-                    style="padding: 8px; border: 1px solid #ddd; border-radius: 4px; width: 100px;">
+
+                <div class="price-filter">
+                    <div id="price-display" onclick="togglePriceDropdown()">
+                        <span id="range-text">Chọn khoảng giá</span>
+                    </div>
+                    <div id="price-dropdown" class="price-dropdown">
+                        <div class="price-inputs">
+                            <div class="input-group">
+                                <label>Từ:</label>
+                                <input type="number" name="minPrice" id="minPriceInput" th:value="${minPrice}"
+                                    placeholder="VNĐ">
+                            </div>
+                            <div class="input-group">
+                                <label>Đến:</label>
+                                <input type="number" name="maxPrice" id="maxPriceInput" th:value="${maxPrice}"
+                                    placeholder="VNĐ">
+                            </div>
+                        </div>
+                        <div class="dropdown-actions">
+                            <button type="button" class="btn-clear-inner" onclick="clearPrice()">Xóa</button>
+                            <button type="submit" class="btn-apply">Áp dụng</button>
+                        </div>
+                    </div>
+                </div>
+
                 <button type="submit"
                     style="background-color: #3498db; color: white; padding: 8px 15px; border: none; border-radius: 4px; cursor: pointer;">Tìm
                     kiếm</button>
@@ -118,6 +238,51 @@
             </tbody>
         </table>
     </div>
+
+    <script th:inline="javascript">
+        function togglePriceDropdown() {
+            document.getElementById('price-dropdown').classList.toggle('show');
+        }
+
+        function clearPrice() {
+            document.getElementById('minPriceInput').value = '';
+            document.getElementById('maxPriceInput').value = '';
+            updatePriceDisplay();
+        }
+
+        function updatePriceDisplay() {
+            const min = document.getElementById('minPriceInput').value;
+            const max = document.getElementById('maxPriceInput').value;
+            const textSpan = document.getElementById('range-text');
+
+            if (min && max) {
+                textSpan.innerText = formatNumber(min) + ' - ' + formatNumber(max);
+            } else if (min) {
+                textSpan.innerText = 'Từ ' + formatNumber(min);
+            } else if (max) {
+                textSpan.innerText = 'Đến ' + formatNumber(max);
+            } else {
+                textSpan.innerText = 'Chọn khoảng giá';
+            }
+        }
+
+        function formatNumber(num) {
+            return new Intl.NumberFormat().format(num);
+        }
+
+        // Close dropdown when clicking outside
+        window.onclick = function (event) {
+            if (!event.target.closest('.price-filter')) {
+                const dropdown = document.getElementById('price-dropdown');
+                if (dropdown.classList.contains('show')) {
+                    dropdown.classList.remove('show');
+                }
+            }
+        }
+
+        // Initial call to set correctly on page load
+        updatePriceDisplay();
+    </script>
 </body>
 
 </html>

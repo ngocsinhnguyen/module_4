@@ -3,57 +3,87 @@
 
 <head>
     <meta charset="UTF-8">
-    <title th:text="${errorCode} + ' - Oops!'">Error</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${errorCode} + ' - ' + ${errorTitle}">Error</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
     <style>
         body {
-            font-family: 'Segoe UI', sans-serif;
-            text-align: center;
-            padding: 50px;
-            background-color: #f8f9fa;
-        }
-
-        .error-container {
-            max-width: 500px;
-            margin: auto;
-            background: white;
-            padding: 40px;
-            border-radius: 8px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-        }
-
-        h1 {
-            font-size: 80px;
-            color: #e74c3c;
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            background-color: #f0f2f5;
             margin: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            color: #1c1e21;
+        }
+
+        .error-card {
+            background: white;
+            padding: 3rem;
+            border-radius: 20px;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            max-width: 500px;
+            width: 90%;
+            text-align: center;
+        }
+
+        .error-code {
+            font-size: 6rem;
+            font-weight: 800;
+            margin: 0;
+            background: linear-gradient(135deg, #e74c3c 0%, #f39c12 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            line-height: 1;
         }
 
         h2 {
+            font-size: 1.5rem;
+            margin-top: 1rem;
             color: #2c3e50;
         }
 
         p {
-            font-size: 18px;
-            color: #7f8c8d;
-            margin-bottom: 30px;
+            color: #64748b;
+            line-height: 1.6;
+            margin-bottom: 2rem;
         }
 
-        .btn {
-            text-decoration: none;
-            background-color: #3498db;
+        .btn-home {
+            display: inline-block;
+            background: #3498db;
             color: white;
-            padding: 10px 20px;
-            border-radius: 4px;
-            font-weight: bold;
+            padding: 0.75rem 1.5rem;
+            border-radius: 10px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.2s;
+            box-shadow: 0 4px 6px -1px rgba(52, 152, 219, 0.4);
+        }
+
+        .btn-home:hover {
+            background: #2980b9;
+            transform: translateY(-1px);
+            box-shadow: 0 10px 15px -3px rgba(52, 152, 219, 0.4);
+        }
+
+        .illustration {
+            font-size: 4rem;
+            margin-bottom: 1rem;
         }
     </style>
 </head>
 
 <body>
-    <div class="error-container">
-        <h1 th:text="${errorCode}">500</h1>
-        <h2 th:text="${errorTitle}">Đã xảy ra lỗi</h2>
-        <p th:text="${errorMessage}">Vui lòng thử lại sau hoặc quay về trang chủ.</p>
-        <a th:href="@{/products}" class="btn">Quay lại danh sách sản phẩm</a>
+    <div class="error-card">
+        <div class="illustration">⚠️</div>
+        <h1 class="error-code" th:text="${errorCode}">500</h1>
+        <h2 th:text="${errorTitle}">Oops! Đã xảy ra lỗi</h2>
+        <p th:text="${errorMessage}">Chúng tôi rất tiếc về sự bất tiện này. Vui lòng thử lại sau hoặc quay về trang chủ.
+        </p>
+        <a th:href="@{/products}" class="btn-home">Quay lại trang chủ</a>
     </div>
 </body>
 
