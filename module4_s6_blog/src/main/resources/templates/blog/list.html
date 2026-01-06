@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blog List - Personal Blog</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #6366f1;
+            --primary-hover: #4f46e5;
+            --bg: #0f172a;
+            --card-bg: #1e293b;
+            --text: #f8fafc;
+            --text-secondary: #94a3b8;
+            --border: #334155;
+            --success: #10b981;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            padding: 2rem;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 3rem;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: linear-gradient(to right, #6366f1, #a855f7);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.2s;
+            cursor: pointer;
+            border: none;
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-hover);
+            transform: translateY(-2px);
+        }
+
+        .alert {
+            padding: 1rem 1.5rem;
+            border-radius: 0.75rem;
+            margin-bottom: 2rem;
+            background-color: rgba(16, 185, 129, 0.1);
+            border: 1px solid rgba(16, 185, 129, 0.2);
+            color: var(--success);
+            display: flex;
+            align-items: center;
+            animation: slideDown 0.5s ease-out;
+        }
+
+        @keyframes slideDown {
+            from {
+                transform: translateY(-20px);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(4px);
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background-color: var(--card-bg);
+            padding: 2.5rem;
+            border: 1px solid var(--border);
+            border-radius: 1.5rem;
+            max-width: 450px;
+            width: 90%;
+            text-align: center;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+
+        .modal-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .modal-text {
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+        }
+
+        .blog-grid {
+            display: grid;
+            gap: 2rem;
+        }
+
+        .blog-card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 1rem;
+            padding: 2rem;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .blog-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
+        }
+
+        .blog-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--text);
+            text-decoration: none;
+        }
+
+        .blog-title:hover {
+            color: var(--primary);
+        }
+
+        .blog-meta {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+            display: flex;
+            gap: 1rem;
+        }
+
+        .blog-summary {
+            color: var(--text-secondary);
+            margin-bottom: 1.5rem;
+        }
+
+        .blog-actions {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .btn-sm {
+            padding: 0.5rem 1rem;
+            font-size: 0.875rem;
+        }
+
+        .btn-outline {
+            border: 1px solid var(--border);
+            color: var(--text);
+            background: transparent;
+        }
+
+        .btn-outline:hover {
+            background-color: var(--border);
+        }
+
+        .btn-danger {
+            color: #ef4444;
+            border: 1px solid rgba(239, 68, 68, 0.2);
+            background: rgba(239, 68, 68, 0.05);
+        }
+
+        .btn-danger:hover {
+            background-color: #ef4444;
+            color: white;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 4rem;
+            color: var(--text-secondary);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <h1>My Blog</h1>
+            <a th:href="@{/blogs/create}" class="btn btn-primary">New Blog Post</a>
+        </header>
+
+        <div th:if="${message}" class="alert" th:text="${message}"></div>
+
+        <div class="blog-grid" th:if="${not #lists.isEmpty(blogs)}">
+            <div th:each="blog : ${blogs}" class="blog-card">
+                <a th:href="@{/blogs/{id}(id=${blog.id})}" class="blog-title" th:text="${blog.title}"></a>
+                <div class="blog-meta">
+                    <span th:text="${blog.author}">Author</span>
+                    <span>•</span>
+                    <span th:text="${#temporals.format(blog.createdAt, 'MMM dd, yyyy')}">Date</span>
+                </div>
+                <p class="blog-summary" th:text="${blog.summary}"></p>
+                <div class="blog-actions">
+                    <a th:href="@{/blogs/{id}(id=${blog.id})}" class="btn btn-outline btn-sm">Read More</a>
+                    <a th:href="@{/blogs/edit/{id}(id=${blog.id})}" class="btn btn-outline btn-sm">Edit</a>
+                    <button class="btn btn-danger btn-sm"
+                        th:onclick="'showDeleteModal(\'/blogs/delete/' + ${blog.id} + '\')'">Delete</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="empty-state" th:unless="${not #lists.isEmpty(blogs)}">
+            <p>No blog posts found. Start sharing your thoughts!</p>
+        </div>
+    </div>
+
+    <!-- Delete Confirmation Modal -->
+    <div id="deleteModal" class="modal">
+        <div class="modal-content">
+            <h2 class="modal-title">Delete Post?</h2>
+            <p class="modal-text">This action cannot be undone. Are you sure you want to delete this blog post?</p>
+            <div class="modal-actions">
+                <button onclick="closeDeleteModal()" class="btn btn-outline">Cancel</button>
+                <a id="confirmDeleteBtn" href="#" class="btn btn-primary" style="background-color: #ef4444;">Delete</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const modal = document.getElementById('deleteModal');
+        const confirmBtn = document.getElementById('confirmDeleteBtn');
+
+        function showDeleteModal(deleteUrl) {
+            confirmBtn.href = deleteUrl;
+            modal.style.display = 'flex';
+        }
+
+        function closeDeleteModal() {
+            modal.style.display = 'none';
+        }
+
+        // Close modal when clicking outside
+        window.onclick = function (event) {
+            if (event.target == modal) {
+                closeDeleteModal();
+            }
+        }
+    </script>
+</body>
+
+</html>
