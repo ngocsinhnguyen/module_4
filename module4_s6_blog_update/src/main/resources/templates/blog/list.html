@@ -220,6 +220,42 @@
             padding: 4rem;
             color: var(--text-secondary);
         }
+
+        .pagination {
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-top: 3rem;
+            margin-bottom: 2rem;
+        }
+
+        .page-link {
+            padding: 0.5rem 1rem;
+            border: 1px solid var(--border);
+            border-radius: 0.5rem;
+            color: var(--text);
+            text-decoration: none;
+            transition: all 0.2s;
+            font-weight: 500;
+        }
+
+        .page-link:hover:not(.disabled) {
+            background-color: var(--primary);
+            border-color: var(--primary);
+            color: white;
+        }
+
+        .page-link.active {
+            background-color: var(--primary);
+            border-color: var(--primary);
+            color: white;
+        }
+
+        .page-link.disabled {
+            color: var(--text-secondary);
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
     </style>
 </head>
 
@@ -227,8 +263,21 @@
     <div class="container">
         <header>
             <h1>My Blog</h1>
-            <a th:href="@{/blogs/create}" class="btn btn-primary">New Blog Post</a>
+            <div>
+                <a th:href="@{/categories}" class="btn btn-outline" style="margin-right: 0.5rem;">Manage Categories</a>
+                <a th:href="@{/blogs/create}" class="btn btn-primary">New Blog Post</a>
+            </div>
         </header>
+
+        <div class="filter-section" style="margin-bottom: 2rem; display: flex; align-items: center; gap: 1rem;">
+            <span style="color: var(--text-secondary); font-weight: 500;">Filter by Category:</span>
+            <select onchange="filterByCategory(this.value)"
+                style="background-color: var(--card-bg); color: var(--text); border: 1px solid var(--border); padding: 0.5rem; border-radius: 0.5rem; outline: none; min-width: 150px;">
+                <option value="">All Categories</option>
+                <option th:each="cat : ${categories}" th:value="${cat.id}" th:text="${cat.name}"
+                    th:selected="${cat.id == selectedCategoryId}"></option>
+            </select>
+        </div>
 
         <div th:if="${message}" class="alert" th:text="${message}"></div>
 
@@ -239,6 +288,11 @@
                     <span th:text="${blog.author}">Author</span>
                     <span>•</span>
                     <span th:text="${#temporals.format(blog.createdAt, 'MMM dd, yyyy')}">Date</span>
+                    <span th:if="${blog.category != null}">
+                        <span>•</span>
+                        <span class="category-badge" th:text="${blog.category.name}"
+                            style="background: rgba(99, 102, 241, 0.1); color: var(--primary); padding: 0.1rem 0.5rem; border-radius: 1rem; font-size: 0.75rem;">Category</span>
+                    </span>
                 </div>
                 <p class="blog-summary" th:text="${blog.summary}"></p>
                 <div class="blog-actions">
@@ -252,6 +306,22 @@
 
         <div class="empty-state" th:unless="${not #lists.isEmpty(blogs)}">
             <p>No blog posts found. Start sharing your thoughts!</p>
+        </div>
+
+        <div class="pagination" th:if="${blogPage.totalPages > 1}">
+            <a th:href="@{/blogs(page=0, categoryId=${selectedCategoryId})}" class="page-link"
+                th:classappend="${currentPage == 0} ? 'disabled'">First</a>
+
+            <a th:href="@{/blogs(page=${currentPage - 1}, categoryId=${selectedCategoryId})}" class="page-link"
+                th:classappend="${currentPage == 0} ? 'disabled'">Prev</a>
+
+            <span class="page-link active" th:text="${currentPage + 1}"></span>
+
+            <a th:href="@{/blogs(page=${currentPage + 1}, categoryId=${selectedCategoryId})}" class="page-link"
+                th:classappend="${currentPage + 1 >= blogPage.totalPages} ? 'disabled'">Next</a>
+
+            <a th:href="@{/blogs(page=${blogPage.totalPages - 1}, categoryId=${selectedCategoryId})}" class="page-link"
+                th:classappend="${currentPage + 1 >= blogPage.totalPages} ? 'disabled'">Last</a>
         </div>
     </div>
 
@@ -284,6 +354,14 @@
         window.onclick = function (event) {
             if (event.target == modal) {
                 closeDeleteModal();
+            }
+        }
+
+        function filterByCategory(categoryId) {
+            if (categoryId) {
+                window.location.href = '/blogs?categoryId=' + categoryId;
+            } else {
+                window.location.href = '/blogs';
             }
         }
     </script>

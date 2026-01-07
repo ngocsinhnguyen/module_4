@@ -1,4 +1,4 @@
-package com.example.module4_s6_blog.model;
+package com.example.module4_s6_blog.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
@@ -37,10 +37,15 @@ public class Blog {
     @NotBlank(message = "Author is mandatory")
     private String author;
 
+    @Column(updatable = false)
     private LocalDateTime createdAt;
 
     @PrePersist
     protected void onCreate() {
         createdAt = LocalDateTime.now();
     }
+
+    @ManyToOne
+    @JoinColumn(name = "category_id")
+    private Category category;
 }
