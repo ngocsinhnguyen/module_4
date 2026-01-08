@@ -95,7 +95,7 @@ public class BlogController {
         return "blog/view";
     }
 
-    @GetMapping("/edit/{id}")
+    @GetMapping("/{id}/edit")
     public String showEditForm(@PathVariable Long id, Model model) {
         Blog blog = blogService.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid blog Id:" + id));
@@ -103,7 +103,7 @@ public class BlogController {
         return "blog/edit";
     }
 
-    @PostMapping("/edit/{id}")
+    @PostMapping("/{id}/edit")
     public String updateBlog(@PathVariable Long id, 
                              @Valid @ModelAttribute("blog") Blog blog, 
                              BindingResult bindingResult, 
@@ -119,7 +119,7 @@ public class BlogController {
         return "redirect:/blogs";
     }
 
-    @GetMapping("/delete/{id}")
+    @GetMapping("/{id}/delete")
     public String deleteBlog(@PathVariable Long id, RedirectAttributes redirectAttributes) {
         blogService.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid blog Id:" + id));
