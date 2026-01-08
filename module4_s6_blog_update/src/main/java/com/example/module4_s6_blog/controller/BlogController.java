@@ -7,6 +7,7 @@ import com.example.module4_s6_blog.service.ICategoryService;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -39,18 +40,32 @@ public class BlogController {
 
     @GetMapping
     public String listBlogs(@RequestParam(required = false) Long categoryId,
+                            @RequestParam(required = false) String search,
+                            @RequestParam(defaultValue = "desc") String sort,
                             @RequestParam(defaultValue = "0") int page,
                             Model model) {
         Page<Blog> blogPage;
-        if (categoryId != null) {
-            blogPage = blogService.findByCategoryId(categoryId, PageRequest.of(page, 2));
+        Sort.Direction direction = "asc".equalsIgnoreCase(sort) ? Sort.Direction.ASC : Sort.Direction.DESC;
+        PageRequest pageRequest = PageRequest.of(page, 2, Sort.by(direction, "createdAt"));
+
+        if (categoryId != null && search != null && !search.isEmpty()) {
+            blogPage = blogService.findByCategoryIdWithSearch(categoryId, search, pageRequest);
             model.addAttribute("selectedCategoryId", categoryId);
+            model.addAttribute("search", search);
+        } else if (categoryId != null) {
+            blogPage = blogService.findByCategoryId(categoryId, pageRequest);
+            model.addAttribute("selectedCategoryId", categoryId);
+        } else if (search != null && !search.isEmpty()) {
+            blogPage = blogService.findAllWithSearch(search, pageRequest);
+            model.addAttribute("search", search);
         } else {
-            blogPage = blogService.findAll(PageRequest.of(page, 2));
+            blogPage = blogService.findAll(pageRequest);
         }
+
         model.addAttribute("blogPage", blogPage);
         model.addAttribute("blogs", blogPage.getContent());
         model.addAttribute("currentPage", page);
+        model.addAttribute("sort", sort);
         return "blog/list";
     }
 
@@ -96,6 +111,8 @@ public class BlogController {
         if (bindingResult.hasErrors()) {
             return "blog/edit";
         }
+        blogService.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid blog Id:" + id));
         blog.setId(id);
         blogService.save(blog);
         redirectAttributes.addFlashAttribute("message", "Blog updated successfully!");
@@ -104,6 +121,8 @@ public class BlogController {
 
     @GetMapping("/delete/{id}")
     public String deleteBlog(@PathVariable Long id, RedirectAttributes redirectAttributes) {
+        blogService.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid blog Id:" + id));
         blogService.deleteById(id);
         redirectAttributes.addFlashAttribute("message", "Blog deleted successfully!");
         return "redirect:/blogs";

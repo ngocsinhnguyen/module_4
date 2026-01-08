@@ -12,4 +12,6 @@ public interface IBlogService {
     Blog save(Blog blog);
     void deleteById(Long id);
     Page<Blog> findByCategoryId(Long categoryId, Pageable pageable);
+    Page<Blog> findAllWithSearch(String title, Pageable pageable);
+    Page<Blog> findByCategoryIdWithSearch(Long categoryId, String title, Pageable pageable);
 }

@@ -269,14 +269,38 @@
             </div>
         </header>
 
-        <div class="filter-section" style="margin-bottom: 2rem; display: flex; align-items: center; gap: 1rem;">
-            <span style="color: var(--text-secondary); font-weight: 500;">Filter by Category:</span>
-            <select onchange="filterByCategory(this.value)"
-                style="background-color: var(--card-bg); color: var(--text); border: 1px solid var(--border); padding: 0.5rem; border-radius: 0.5rem; outline: none; min-width: 150px;">
-                <option value="">All Categories</option>
-                <option th:each="cat : ${categories}" th:value="${cat.id}" th:text="${cat.name}"
-                    th:selected="${cat.id == selectedCategoryId}"></option>
-            </select>
+        <div class="filter-section"
+            style="margin-bottom: 2rem; display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;">
+            <div style="display: flex; align-items: center; gap: 0.5rem;">
+                <span style="color: var(--text-secondary); font-weight: 500;">Category:</span>
+                <select id="categorySelect" onchange="filterByCategory(this.value)"
+                    style="background-color: var(--card-bg); color: var(--text); border: 1px solid var(--border); padding: 0.5rem; border-radius: 0.5rem; outline: none; min-width: 150px;">
+                    <option value="">All Categories</option>
+                    <option th:each="cat : ${categories}" th:value="${cat.id}" th:text="${cat.name}"
+                        th:selected="${cat.id == selectedCategoryId}"></option>
+                </select>
+            </div>
+
+            <div style="display: flex; align-items: center; gap: 0.5rem;">
+                <span style="color: var(--text-secondary); font-weight: 500;">Sort By:</span>
+                <select id="sortSelect" onchange="changeSort(this.value)"
+                    style="background-color: var(--card-bg); color: var(--text); border: 1px solid var(--border); padding: 0.5rem; border-radius: 0.5rem; outline: none;">
+                    <option value="desc" th:selected="${sort == 'desc'}">Newest First</option>
+                    <option value="asc" th:selected="${sort == 'asc'}">Oldest First</option>
+                </select>
+            </div>
+
+            <form th:action="@{/blogs}" method="get"
+                style="display: flex; gap: 0.5rem; flex-grow: 1; max-width: 400px;">
+                <input type="hidden" name="categoryId" th:value="${selectedCategoryId}">
+                <input type="hidden" name="sort" th:value="${sort}">
+                <input type="text" name="search" th:value="${search}" placeholder="Search blogs..."
+                    style="background-color: var(--card-bg); color: var(--text); border: 1px solid var(--border); padding: 0.5rem 1rem; border-radius: 0.5rem; outline: none; flex-grow: 1;">
+                <button type="submit" class="btn btn-primary btn-sm">Search</button>
+                <a th:if="${search != null and search != ''}"
+                    th:href="@{/blogs(categoryId=${selectedCategoryId}, sort=${sort})}"
+                    class="btn btn-outline btn-sm">Clear</a>
+            </form>
         </div>
 
         <div th:if="${message}" class="alert" th:text="${message}"></div>
@@ -309,19 +333,19 @@
         </div>
 
         <div class="pagination" th:if="${blogPage.totalPages > 1}">
-            <a th:href="@{/blogs(page=0, categoryId=${selectedCategoryId})}" class="page-link"
-                th:classappend="${currentPage == 0} ? 'disabled'">First</a>
+            <a th:href="@{/blogs(page=0, categoryId=${selectedCategoryId}, search=${search}, sort=${sort})}"
+                class="page-link" th:classappend="${currentPage == 0} ? 'disabled'">First</a>
 
-            <a th:href="@{/blogs(page=${currentPage - 1}, categoryId=${selectedCategoryId})}" class="page-link"
-                th:classappend="${currentPage == 0} ? 'disabled'">Prev</a>
+            <a th:href="@{/blogs(page=${currentPage - 1}, categoryId=${selectedCategoryId}, search=${search}, sort=${sort})}"
+                class="page-link" th:classappend="${currentPage == 0} ? 'disabled'">Prev</a>
 
             <span class="page-link active" th:text="${currentPage + 1}"></span>
 
-            <a th:href="@{/blogs(page=${currentPage + 1}, categoryId=${selectedCategoryId})}" class="page-link"
-                th:classappend="${currentPage + 1 >= blogPage.totalPages} ? 'disabled'">Next</a>
+            <a th:href="@{/blogs(page=${currentPage + 1}, categoryId=${selectedCategoryId}, search=${search}, sort=${sort})}"
+                class="page-link" th:classappend="${currentPage + 1 >= blogPage.totalPages} ? 'disabled'">Next</a>
 
-            <a th:href="@{/blogs(page=${blogPage.totalPages - 1}, categoryId=${selectedCategoryId})}" class="page-link"
-                th:classappend="${currentPage + 1 >= blogPage.totalPages} ? 'disabled'">Last</a>
+            <a th:href="@{/blogs(page=${blogPage.totalPages - 1}, categoryId=${selectedCategoryId}, search=${search}, sort=${sort})}"
+                class="page-link" th:classappend="${currentPage + 1 >= blogPage.totalPages} ? 'disabled'">Last</a>
         </div>
     </div>
 
@@ -358,11 +382,21 @@
         }
 
         function filterByCategory(categoryId) {
+            const urlParams = new URLSearchParams(window.location.search);
             if (categoryId) {
-                window.location.href = '/blogs?categoryId=' + categoryId;
+                urlParams.set('categoryId', categoryId);
             } else {
-                window.location.href = '/blogs';
+                urlParams.delete('categoryId');
             }
+            urlParams.set('page', '0');
+            window.location.href = '/blogs?' + urlParams.toString();
+        }
+
+        function changeSort(sort) {
+            const urlParams = new URLSearchParams(window.location.search);
+            urlParams.set('sort', sort);
+            urlParams.set('page', '0');
+            window.location.href = '/blogs?' + urlParams.toString();
         }
     </script>
 </body>

@@ -41,13 +41,13 @@ public class CategoryController {
         return "redirect:/categories";
     }
 
-    @GetMapping("/edit/{id}")
+    @GetMapping("/{id}/edit")
     public String showEditForm(@PathVariable Long id, Model model) {
         model.addAttribute("category", categoryService.findById(id).orElseThrow());
         return "category/edit";
     }
 
-    @PostMapping("/edit/{id}")
+    @PostMapping("/{id}/edit")
     public String edit(@PathVariable Long id,
                        @Valid @ModelAttribute("category") Category category,
                        BindingResult result,
@@ -61,7 +61,7 @@ public class CategoryController {
         return "redirect:/categories";
     }
 
-    @GetMapping("/delete/{id}")
+    @GetMapping("/{id}/delete")
     public String delete(@PathVariable Long id, RedirectAttributes redirectAttributes) {
         categoryService.deleteById(id);
         redirectAttributes.addFlashAttribute("message", "Category deleted successfully!");
