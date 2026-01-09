@@ -13,7 +13,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 @Aspect
 @Component
 public class LibraryAspect {
-    private static final String LOG_FILE = "library.log";
+    private static final String LOG_FILE = "library.txt";
     private static final AtomicInteger visitorCount = new AtomicInteger(0);
 
     @Pointcut("within(com.example.module4_s9_muonsach.controller.BookController)")
@@ -32,7 +32,7 @@ public class LibraryAspect {
     @AfterReturning("bookStatusChangeAction()")
     public void logStatusChange(JoinPoint joinPoint) {
         String action = joinPoint.getSignature().getName();
-        writeLog("THAY ĐỔI TRẠNG THÁI: " + (action.equals("borrowBook") ? "Mượn sách" : "Trả sách") + " | " + joinPoint.getSignature().toShortString());
+        writeLog("THAY ĐỔI TRẠNG THÁI: " + (action.equals("borrowBook") ? "Mượn sách" : "Trả sách"));
     }
 
     private void writeLog(String message) {

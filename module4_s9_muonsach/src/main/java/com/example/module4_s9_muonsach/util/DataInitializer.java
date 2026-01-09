@@ -14,10 +14,10 @@ public class DataInitializer implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
         if (bookRepository.count() == 0) {
-            bookRepository.save(new Book(null, "Clean Code", 5));
-            bookRepository.save(new Book(null, "Design Patterns", 3));
-            bookRepository.save(new Book(null, "Effective Java", 1));
-            bookRepository.save(new Book(null, "Refactoring", 0));
+            bookRepository.save(new Book(null, "Toán", 5));
+            bookRepository.save(new Book(null, "Lí", 3));
+            bookRepository.save(new Book(null, "Hóa", 1));
+            bookRepository.save(new Book(null, "Anh", 0));
         }
     }
 }
