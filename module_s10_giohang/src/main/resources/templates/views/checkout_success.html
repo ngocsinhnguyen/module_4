@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đặt Hàng Thành Công</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .success-container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            padding: 60px 50px;
+            text-align: center;
+            max-width: 600px;
+            width: 100%;
+            animation: slideIn 0.5s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .success-icon {
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 30px;
+            animation: scaleIn 0.5s ease-out 0.2s both;
+        }
+
+        @keyframes scaleIn {
+            from {
+                transform: scale(0);
+            }
+
+            to {
+                transform: scale(1);
+            }
+        }
+
+        .success-icon::before {
+            content: "✓";
+            color: white;
+            font-size: 60px;
+            font-weight: bold;
+        }
+
+        h1 {
+            color: #28a745;
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            animation: fadeIn 0.5s ease-out 0.3s both;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        .success-message {
+            color: #666;
+            font-size: 1.1rem;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+
+        .order-summary {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 30px;
+            margin: 30px 0;
+            text-align: left;
+        }
+
+        .summary-title {
+            color: #667eea;
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid #dee2e6;
+        }
+
+        .summary-row:last-child {
+            border-bottom: none;
+            padding-top: 20px;
+            margin-top: 10px;
+            border-top: 2px solid #667eea;
+        }
+
+        .summary-label {
+            color: #666;
+            font-weight: 600;
+        }
+
+        .summary-value {
+            color: #333;
+            font-weight: 700;
+        }
+
+        .summary-row:last-child .summary-value {
+            color: #28a745;
+            font-size: 1.5rem;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 15px 30px;
+            border-radius: 10px;
+            text-decoration: none;
+            font-weight: 600;
+            text-align: center;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+        }
+
+        .btn-shop {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-shop:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .order-number {
+            background: #fff3cd;
+            border: 2px dashed #ffc107;
+            border-radius: 10px;
+            padding: 15px;
+            margin: 20px 0;
+            color: #856404;
+            font-weight: 600;
+        }
+
+        @media (max-width: 768px) {
+            .success-container {
+                padding: 40px 30px;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="success-container">
+        <div class="success-icon"></div>
+
+        <h1>Đặt Hàng Thành Công!</h1>
+
+        <p class="success-message">
+            Cảm ơn bạn đã mua sắm tại cửa hàng của chúng tôi.<br>
+            Đơn hàng của bạn đã được xác nhận và đang được xử lý.
+        </p>
+
+        <div class="order-number">
+            📋 Mã đơn hàng: <strong
+                th:text="'#' + ${#temporals.format(#temporals.createNow(), 'yyyyMMddHHmmss')}">ORDER123</strong>
+        </div>
+
+        <div class="order-summary">
+            <div class="summary-title">📊 Thông Tin Đơn Hàng</div>
+
+            <div class="summary-row">
+                <span class="summary-label">Tổng số sản phẩm:</span>
+                <span class="summary-value" th:text="${totalItems} + ' sản phẩm'">0 sản phẩm</span>
+            </div>
+
+            <div class="summary-row">
+                <span class="summary-label">Tổng tiền hàng:</span>
+                <span class="summary-value" th:text="${#numbers.formatDecimal(totalAmount, 0, 0)} + ' đ'">0 đ</span>
+            </div>
+
+            <div class="summary-row">
+                <span class="summary-label">Phí vận chuyển:</span>
+                <span class="summary-value">Miễn phí</span>
+            </div>
+
+            <div class="summary-row">
+                <span class="summary-label">Tổng thanh toán:</span>
+                <span class="summary-value" th:text="${#numbers.formatDecimal(totalAmount, 0, 0)} + ' đ'">0 đ</span>
+            </div>
+        </div>
+
+        <div class="action-buttons">
+            <a href="/shop" class="btn btn-shop">🛍️ Tiếp tục mua sắm</a>
+        </div>
+
+        <p style="margin-top: 30px; color: #999; font-size: 0.9rem;">
+            Chúng tôi sẽ gửi email xác nhận đơn hàng cho bạn trong thời gian sớm nhất.
+        </p>
+    </div>
+</body>
+
+</html>
