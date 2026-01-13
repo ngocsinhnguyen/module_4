@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create New Blog - Personal Blog</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #6366f1;
+            --primary-hover: #4f46e5;
+            --bg: #0f172a;
+            --card-bg: #1e293b;
+            --text: #f8fafc;
+            --text-secondary: #94a3b8;
+            --border: #334155;
+            --error: #ef4444;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            padding: 2rem;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        header {
+            margin-bottom: 2rem;
+        }
+
+        h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--text);
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-bottom: 1rem;
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+
+        .form-card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 1rem;
+            padding: 2rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--text);
+        }
+
+        input,
+        textarea,
+        select {
+            width: 100%;
+            padding: 0.75rem;
+            background-color: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 0.5rem;
+            color: var(--text);
+            font-size: 1rem;
+            transition: border-color 0.2s;
+        }
+
+        input:focus,
+        textarea:focus,
+        select:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        textarea {
+            min-height: 150px;
+            resize: vertical;
+        }
+
+        .error-message {
+            color: var(--error);
+            font-size: 0.875rem;
+            margin-top: 0.25rem;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.2s;
+            cursor: pointer;
+            border: none;
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-hover);
+        }
+
+        .btn-cancel {
+            background-color: transparent;
+            border: 1px solid var(--border);
+            color: var(--text);
+            margin-left: 1rem;
+        }
+
+        .btn-cancel:hover {
+            background-color: var(--border);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <a th:href="@{/blogs}" class="back-link">← Back to List</a>
+        <header>
+            <h1 th:text="${blog.id == null ? 'Create New Blog Post' : 'Edit Blog Post'}">Create New Blog Post</h1>
+        </header>
+
+        <div class="form-card">
+            <form th:action="${blog.id == null ? '/blogs/create' : '/blogs/edit/' + blog.id}" th:object="${blog}"
+                method="post">
+
+                <div class="form-group">
+                    <label for="title">Title</label>
+                    <input type="text" id="title" th:field="*{title}" placeholder="Enter blog title">
+                    <div class="error-message" th:if="${#fields.hasErrors('title')}" th:errors="*{title}"></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="author">Author</label>
+                    <input type="text" id="author" th:field="*{author}" placeholder="Enter author name">
+                    <div class="error-message" th:if="${#fields.hasErrors('author')}" th:errors="*{author}"></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="category">Category</label>
+                    <select id="category" th:field="*{category.id}">
+                        <option value="">Select Category</option>
+                        <option th:each="cat : ${categories}" th:value="${cat.id}" th:text="${cat.name}"></option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="summary">Summary</label>
+                    <input type="text" id="summary" th:field="*{summary}" placeholder="Short summary of the blog">
+                    <div class="error-message" th:if="${#fields.hasErrors('summary')}" th:errors="*{summary}"></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="content">Content</label>
+                    <textarea id="content" th:field="*{content}"
+                        placeholder="Write your blog content here..."></textarea>
+                    <div class="error-message" th:if="${#fields.hasErrors('content')}" th:errors="*{content}"></div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary"
+                        th:text="${blog.id == null ? 'Publish Post' : 'Update Post'}">Publish Post</button>
+                    <a th:href="@{/blogs}" class="btn btn-cancel">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+
+</html>

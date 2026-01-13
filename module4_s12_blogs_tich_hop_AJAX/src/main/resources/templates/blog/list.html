@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blog List - Personal Blog</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script th:src="@{/webjars/jquery/3.7.1/jquery.min.js}"></script>
+    <style>
+        :root {
+            --primary: #6366f1;
+            --primary-hover: #4f46e5;
+            --bg: #0f172a;
+            --card-bg: #1e293b;
+            --text: #f8fafc;
+            --text-secondary: #94a3b8;
+            --border: #334155;
+            --success: #10b981;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            padding: 2rem;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 3rem;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: linear-gradient(to right, #6366f1, #a855f7);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.2s;
+            cursor: pointer;
+            border: none;
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-hover);
+            transform: translateY(-2px);
+        }
+
+        .alert {
+            padding: 1rem 1.5rem;
+            border-radius: 0.75rem;
+            margin-bottom: 2rem;
+            background-color: rgba(16, 185, 129, 0.1);
+            border: 1px solid rgba(16, 185, 129, 0.2);
+            color: var(--success);
+            display: flex;
+            align-items: center;
+            animation: slideDown 0.5s ease-out;
+        }
+
+        @keyframes slideDown {
+            from {
+                transform: translateY(-20px);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(4px);
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background-color: var(--card-bg);
+            padding: 2.5rem;
+            border: 1px solid var(--border);
+            border-radius: 1.5rem;
+            max-width: 450px;
+            width: 90%;
+            text-align: center;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+
+        .modal-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .modal-text {
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+        }
+
+        .blog-grid {
+            display: grid;
+            gap: 2rem;
+        }
+
+        .blog-card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 1rem;
+            padding: 2rem;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .blog-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
+        }
+
+        .blog-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--text);
+            text-decoration: none;
+        }
+
+        .blog-title:hover {
+            color: var(--primary);
+        }
+
+        .blog-meta {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+            display: flex;
+            gap: 1rem;
+        }
+
+        .blog-summary {
+            color: var(--text-secondary);
+            margin-bottom: 1.5rem;
+        }
+
+        .blog-actions {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .btn-sm {
+            padding: 0.5rem 1rem;
+            font-size: 0.875rem;
+        }
+
+        .btn-outline {
+            border: 1px solid var(--border);
+            color: var(--text);
+            background: transparent;
+        }
+
+        .btn-outline:hover {
+            background-color: var(--border);
+        }
+
+        .btn-danger {
+            color: #ef4444;
+            border: 1px solid rgba(239, 68, 68, 0.2);
+            background: rgba(239, 68, 68, 0.05);
+        }
+
+        .btn-danger:hover {
+            background-color: #ef4444;
+            color: white;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 4rem;
+            color: var(--text-secondary);
+        }
+
+        .pagination {
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-top: 3rem;
+            margin-bottom: 2rem;
+        }
+
+        .page-link {
+            padding: 0.5rem 1rem;
+            border: 1px solid var(--border);
+            border-radius: 0.5rem;
+            color: var(--text);
+            text-decoration: none;
+            transition: all 0.2s;
+            font-weight: 500;
+        }
+
+        .page-link:hover:not(.disabled) {
+            background-color: var(--primary);
+            border-color: var(--primary);
+            color: white;
+        }
+
+        .page-link.active {
+            background-color: var(--primary);
+            border-color: var(--primary);
+            color: white;
+        }
+
+        .page-link.disabled {
+            color: var(--text-secondary);
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <h1>My Blog</h1>
+            <div>
+                <a th:href="@{/categories}" class="btn btn-outline" style="margin-right: 0.5rem;">Manage Categories</a>
+                <a th:href="@{/blogs/create}" class="btn btn-primary">New Blog Post</a>
+            </div>
+        </header>
+
+        <div class="filter-section"
+            style="margin-bottom: 2rem; display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;">
+            <div style="display: flex; align-items: center; gap: 0.5rem;">
+                <span style="color: var(--text-secondary); font-weight: 500;">Category:</span>
+                <select id="categorySelect" onchange="filterByCategory(this.value)"
+                    style="background-color: var(--card-bg); color: var(--text); border: 1px solid var(--border); padding: 0.5rem; border-radius: 0.5rem; outline: none; min-width: 150px;">
+                    <option value="">All Categories</option>
+                    <option th:each="cat : ${categories}" th:value="${cat.id}" th:text="${cat.name}"
+                        th:selected="${cat.id == selectedCategoryId}"></option>
+                </select>
+            </div>
+
+            <div style="display: flex; align-items: center; gap: 0.5rem;">
+                <span style="color: var(--text-secondary); font-weight: 500;">Sort By:</span>
+                <select id="sortSelect" onchange="changeSort(this.value)"
+                    style="background-color: var(--card-bg); color: var(--text); border: 1px solid var(--border); padding: 0.5rem; border-radius: 0.5rem; outline: none;">
+                    <option value="desc" th:selected="${sort == 'desc'}">Newest First</option>
+                    <option value="asc" th:selected="${sort == 'asc'}">Oldest First</option>
+                </select>
+            </div>
+
+            <form id="search-form" th:action="@{/blogs}" method="get"
+                style="display: flex; gap: 0.5rem; flex-grow: 1; max-width: 400px;">
+                <input type="hidden" name="categoryId" th:value="${selectedCategoryId}">
+                <input type="hidden" name="sort" th:value="${sort}">
+                <input type="text" id="searchInput" name="search" th:value="${search}" placeholder="Search blogs..."
+                    style="background-color: var(--card-bg); color: var(--text); border: 1px solid var(--border); padding: 0.5rem 1rem; border-radius: 0.5rem; outline: none; flex-grow: 1;">
+                <button type="submit" class="btn btn-primary btn-sm">Search</button>
+                <a th:if="${search != null and search != ''}"
+                    th:href="@{/blogs(categoryId=${selectedCategoryId}, sort=${sort})}"
+                    class="btn btn-outline btn-sm">Clear</a>
+            </form>
+        </div>
+
+        <div th:if="${message}" class="alert" th:text="${message}"></div>
+
+        <div id="blog-list-container" th:fragment="blogList">
+            <div class="blog-grid" id="blog-grid" th:if="${not #lists.isEmpty(blogs)}" th:fragment="blogItems">
+                <div th:each="blog : ${blogs}" class="blog-card">
+                    <a th:href="@{/blogs/{id}(id=${blog.id})}" class="blog-title" th:text="${blog.title}"></a>
+                    <div class="blog-meta">
+                        <span th:text="${blog.author}">Author</span>
+                        <span>•</span>
+                        <span th:text="${#temporals.format(blog.createdAt, 'MMM dd, yyyy')}">Date</span>
+                        <span th:if="${blog.category != null}">
+                            <span>•</span>
+                            <span class="category-badge" th:text="${blog.category.name}"
+                                style="background: rgba(99, 102, 241, 0.1); color: var(--primary); padding: 0.1rem 0.5rem; border-radius: 1rem; font-size: 0.75rem;">Category</span>
+                        </span>
+                    </div>
+                    <p class="blog-summary" th:text="${blog.summary}"></p>
+                    <div class="blog-actions">
+                        <a th:href="@{/blogs/{id}(id=${blog.id})}" class="btn btn-outline btn-sm">Read More</a>
+                        <a th:href="@{/blogs/edit/{id}(id=${blog.id})}" class="btn btn-outline btn-sm">Edit</a>
+                        <button class="btn btn-danger btn-sm"
+                            th:onclick="'showDeleteModal(\'/blogs/delete/' + ${blog.id} + '\')'">Delete</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="empty-state" th:unless="${not #lists.isEmpty(blogs)}">
+                <p>No blog posts found. Start sharing your thoughts!</p>
+            </div>
+
+            <!-- AJAX Load More Button -->
+            <div style="text-align: center; margin-top: 2rem;" th:if="${blogPage.hasNext()}">
+                <button id="load-more-btn" class="btn btn-outline" th:data-page="${currentPage + 1}"
+                    th:data-search="${search}" th:data-category="${selectedCategoryId}" th:data-sort="${sort}">Load
+                    More</button>
+            </div>
+        </div>
+
+        <!-- Hidden old pagination (commented out or remove) -->
+        <!-- 
+        <div class="pagination" th:if="${blogPage.totalPages > 1}">
+            ...
+        </div>
+        -->
+    </div>
+
+    <!-- Delete Confirmation Modal -->
+    <div id="deleteModal" class="modal">
+        <div class="modal-content">
+            <h2 class="modal-title">Delete Post?</h2>
+            <p class="modal-text">This action cannot be undone. Are you sure you want to delete this blog post?</p>
+            <div class="modal-actions">
+                <button onclick="closeDeleteModal()" class="btn btn-outline">Cancel</button>
+                <a id="confirmDeleteBtn" href="#" class="btn btn-primary" style="background-color: #ef4444;">Delete</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const modal = document.getElementById('deleteModal');
+        const confirmBtn = document.getElementById('confirmDeleteBtn');
+
+        function showDeleteModal(deleteUrl) {
+            confirmBtn.href = deleteUrl;
+            modal.style.display = 'flex';
+        }
+
+        function closeDeleteModal() {
+            modal.style.display = 'none';
+        }
+
+        window.onclick = function (event) {
+            if (event.target == modal) {
+                closeDeleteModal();
+            }
+        }
+
+        function loadBlogs(categoryId, search, sort) {
+            $.ajax({
+                url: '/blogs/search',
+                type: 'GET',
+                data: {
+                    categoryId: categoryId,
+                    search: search,
+                    sort: sort
+                },
+                success: function (data) {
+                    $('#blog-list-container').html(data);
+                }
+            });
+        }
+
+        function filterByCategory(categoryId) {
+            loadBlogs(categoryId, $('#searchInput').val(), $('#sortSelect').val());
+        }
+
+        function changeSort(sort) {
+            loadBlogs($('#categorySelect').val(), $('#searchInput').val(), sort);
+        }
+
+        $(document).ready(function () {
+            // Search AJAX
+            $('#search-form').submit(function (e) {
+                e.preventDefault();
+                loadBlogs($('#categorySelect').val(), $('#searchInput').val(), $('#sortSelect').val());
+            });
+
+            // Load More AJAX
+            $(document).on('click', '#load-more-btn', function () {
+                const btn = $(this);
+                const page = btn.data('page');
+                const search = btn.data('search');
+                const categoryId = btn.data('category');
+                const sort = btn.data('sort');
+
+                btn.prop('disabled', true).text('Loading...');
+
+                $.ajax({
+                    url: '/blogs/load-more',
+                    type: 'GET',
+                    data: {
+                        page: page,
+                        search: search,
+                        categoryId: categoryId,
+                        sort: sort
+                    },
+                    success: function (data) {
+                        // Create a temporary element to parse the returned fragment
+                        const temp = $('<div>').append(data);
+
+                        // Append new blog-cards to the grid
+                        const newItems = temp.find('.blog-card');
+                        if (newItems.length > 0) {
+                            $('#blog-grid').append(newItems);
+                        }
+
+                        // Replace the load-more-btn container with the new one (which contains updated page/hasNext)
+                        const newLoadMore = temp.find('#load-more-btn').parent();
+                        btn.parent().replaceWith(newLoadMore);
+                    },
+                    error: function () {
+                        btn.prop('disabled', false).text('Error! Try again');
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+
+</html>
