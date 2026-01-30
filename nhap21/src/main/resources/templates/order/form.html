@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${order.id == null ? 'Thêm đơn hàng' : 'Sửa đơn hàng'}"></title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <h1 th:text="${order.id == null ? 'Thêm đơn hàng mới' : 'Chỉnh sửa đơn hàng'}"></h1>
+            <a th:href="@{/orders}" class="btn btn-secondary">
+                <i class="fas fa-arrow-left mr-2"></i> Quay lại
+            </a>
+        </div>
+
+        <div class="card" style="max-width: 600px; margin: 0 auto;">
+            <form th:action="@{/orders/save}" th:object="${order}" method="post">
+                <input type="hidden" th:field="*{id}">
+
+                <div class="form-group">
+                    <label>Mã đơn hàng :</label>
+                    <input type="text" th:field="*{orderCode}" class="form-control" placeholder="001">
+                    <div class="error-message" th:if="${#fields.hasErrors('orderCode')}" th:errors="*{orderCode}"></div>
+                </div>
+
+                <div class="form-group">
+                    <label>Tên sản phẩm:</label>
+                    <input type="text" th:field="*{productName}" class="form-control">
+                    <div class="error-message" th:if="${#fields.hasErrors('productName')}" th:errors="*{productName}">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Giá sản phẩm (USD):</label>
+                    <input type="number" th:field="*{price}" class="form-control">
+                    <div class="error-message" th:if="${#fields.hasErrors('price')}" th:errors="*{price}"></div>
+                </div>
+
+                <div class="form-group">
+                    <label>Loại sản phẩm:</label>
+                    <select th:field="*{category.id}" class="form-control">
+                        <option value="">-- Chọn loại sản phẩm --</option>
+                        <option th:each="cat : ${categories}" th:value="${cat.id}" th:text="${cat.name}"></option>
+                    </select>
+                    <div class="error-message" th:if="${#fields.hasErrors('category')}" th:errors="*{category}"></div>
+                </div>
+
+                <div class="form-group">
+                    <label>Ngày mua:</label>
+                    <input type="date" th:field="*{purchaseDate}" class="form-control">
+                    <div class="error-message" th:if="${#fields.hasErrors('purchaseDate')}" th:errors="*{purchaseDate}">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Số lượng:</label>
+                    <input type="number" th:field="*{quantity}" class="form-control">
+                    <div class="error-message" th:if="${#fields.hasErrors('quantity')}" th:errors="*{quantity}"></div>
+                </div>
+
+                <div style="margin-top: 2rem; display: flex; gap: 1rem;">
+                    <button type="submit" class="btn btn-primary" style="flex: 1;">
+                        <i class="fas fa-save mr-2"></i> Lưu đơn hàng
+                    </button>
+                    <button type="reset" class="btn btn-light" style="flex: 1;">Làm mới</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+
+</html>

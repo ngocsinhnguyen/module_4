@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Quản lý đơn hàng</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Danh sách đơn hàng</h1>
+            <a th:href="@{/orders/create}" class="btn btn-primary">
+                <i class="fas fa-plus mr-2"></i> Thêm đơn hàng mới
+            </a>
+        </div>
+
+        <div class="card">
+            <form th:action="@{/orders}" method="get" class="search-bar">
+                <div style="display: flex; gap: 1rem; align-items: center; flex-wrap: wrap;">
+                    <div>
+                        <label>Từ ngày:</label>
+                        <input type="date" name="startDate" th:value="${startDate}" class="search-input"
+                            style="width: 150px;">
+                    </div>
+                    <div>
+                        <label>Đến ngày:</label>
+                        <input type="date" name="endDate" th:value="${endDate}" class="search-input"
+                            style="width: 150px;">
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 0.5rem;">
+                        <input type="checkbox" name="topTotal" th:checked="${topTotal}" id="topTotal">
+                        <label for="topTotal">Đơn hàng tổng tiền cao nhất</label>
+                    </div>
+                    <button type="submit" class="btn btn-secondary">
+                        <i class="fas fa-filter mr-2"></i> Lọc
+                    </button>
+                    <a th:href="@{/orders}" class="btn btn-light">Hủy lọc</a>
+                </div>
+            </form>
+
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>STT</th>
+                            <th>Mã đơn hàng</th>
+                            <th>Tên sản phẩm</th>
+                            <th>Giá sản phẩm</th>
+                            <th>Loại sản phẩm</th>
+                            <th>Ngày mua</th>
+                            <th>Số lượng</th>
+                            <th>Tổng tiền</th>
+                            <th>Thao tác</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="order, stat : ${orders}">
+                            <td th:text="${stat.count}"></td>
+                            <td th:text="${order.orderCode}" style="font-weight: 600;"></td>
+                            <td th:text="${order.productName}"></td>
+                            <td th:text="${#numbers.formatDecimal(order.price, 0, 'COMMA', 0, 'POINT')} + ' USD'"></td>
+                            <td>
+                                <span class="badge badge-info" th:text="${order.category.name}"></span>
+                            </td>
+                            <td th:text="${#temporals.format(order.purchaseDate, 'dd/MM/yyyy')}"></td>
+                            <td th:text="${order.quantity}"></td>
+                            <td th:text="${#numbers.formatDecimal(order.totalAmount, 0, 'COMMA', 0, 'POINT')} + ' USD'"
+                                style="font-weight: bold; color: var(--primary-color);"></td>
+                            <td>
+                                <div style="display: flex; gap: 0.5rem;">
+                                    <a th:href="@{/orders/edit/{id}(id=${order.id})}" class="btn btn-secondary"
+                                        style="padding: 0.4rem 0.8rem;">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                    <a th:href="@{/orders/delete/{id}(id=${order.id})}" class="btn btn-danger"
+                                        style="padding: 0.4rem 0.8rem;"
+                                        onclick="return confirm('Bạn có chắc chắn muốn xóa đơn hàng này?')">
+                                        <i class="fas fa-trash"></i>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr th:if="${#lists.isEmpty(orders)}">
+                            <td colspan="9" style="text-align: center; padding: 2rem; color: var(--text-muted);">
+                                Không tìm thấy đơn hàng nào.
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

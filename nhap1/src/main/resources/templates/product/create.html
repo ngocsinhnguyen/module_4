@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Thêm mới sản phẩm - Công ty ABC</title>
+    <link rel="stylesheet" th:href="@{/style.css}">
+</head>
+
+<body>
+    <div class="container" style="max-width: 600px;">
+        <h1 style="text-align: left;">Thêm mới Sản phẩm</h1>
+        <hr style="border: 0; border-top: 1px solid #e5e7eb; margin-bottom: 2rem;">
+
+        <form th:action="@{/products/create}" th:object="${product}" method="post">
+
+            <div class="form-group">
+                <label>Mã hàng hoá (MHH-XXXX):</label>
+                <input type="text" th:field="*{id}" placeholder="Ví dụ: MHH-0001" required pattern="MHH-\d{4}"
+                    title="Mã hàng hoá phải có định dạng MHH-XXXX (với X là số)">
+                <div class="error-text" th:if="${#fields.hasErrors('id')}" th:errors="*{id}"></div>
+            </div>
+
+            <div class="form-group">
+                <label>Tên hàng hoá:</label>
+                <input type="text" th:field="*{name}" required>
+                <div class="error-text" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></div>
+            </div>
+
+            <div class="form-group">
+                <label>Đơn vị tính:</label>
+                <select th:field="*{unit}" required>
+                    <option value="">-- Chọn đơn vị --</option>
+                    <option value="kg">kg</option>
+                    <option value="túi">túi</option>
+                    <option value="bó">bó</option>
+                    <option value="khay">khay</option>
+                </select>
+                <div class="error-text" th:if="${#fields.hasErrors('unit')}" th:errors="*{unit}"></div>
+            </div>
+
+            <div class="form-group">
+                <label>Giá (VNĐ/kg):</label>
+                <input type="number" th:field="*{price}" min="1000" step="100" required>
+                <div class="error-text" th:if="${#fields.hasErrors('price')}" th:errors="*{price}"></div>
+            </div>
+
+            <div class="form-group">
+                <label>Loại hàng hoá:</label>
+                <select th:field="*{productType}" required>
+                    <option value="">-- Chọn loại hàng hoá --</option>
+                    <option th:each="type : ${productTypes}" th:value="${type.id}" th:text="${type.name}"></option>
+                </select>
+                <div class="error-text" th:if="${#fields.hasErrors('productType')}" th:errors="*{productType}"></div>
+            </div>
+
+            <!-- Nút điều hướng -->
+            <div style="display: flex; gap: 1rem; margin-top: 2rem;">
+                <button type="submit" class="btn btn-primary">Lưu sản phẩm</button>
+                <a th:href="@{/products}" class="btn" style="background: #e5e7eb;">Quay lại</a>
+            </div>
+        </form>
+    </div>
+</body>
+
+</html>

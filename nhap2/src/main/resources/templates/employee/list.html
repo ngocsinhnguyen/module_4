@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+    th:replace="~{layout :: html(title='Danh sách Nhân viên', content=~{::section})}">
+
+<head></head>
+
+<body>
+    <section>
+        <div class="card">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+                <h1>Danh sách Nhân viên</h1>
+                <a th:href="@{/employees/create}" class="btn btn-primary">Thêm Nhân viên mới</a>
+            </div>
+
+            <!-- Thanh tìm kiếm -->
+            <form th:action="@{/employees}" method="get" class="search-bar">
+                <div class="form-group">
+                    <label>Họ tên:</label>
+                    <input type="text" name="name" th:value="${name}" placeholder="Nhập tên cần tìm...">
+                </div>
+                <div class="form-group">
+                    <label>Phòng ban:</label>
+                    <select name="deptId">
+                        <option value="">-- Tất cả phòng ban --</option>
+                        <option th:each="dept : ${departments}" th:value="${dept.id}" th:text="${dept.name}"
+                            th:selected="${dept.id == deptId}"></option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary">Tìm kiếm</button>
+                <a th:href="@{/employees}" class="btn" style="background-color: #e2e8f0;">Làm mới</a>
+            </form>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Mã NV</th>
+                        <th>Họ tên</th>
+                        <th>Ngày sinh</th>
+                        <th>Giới tính</th>
+                        <th>Lương cơ bản</th>
+                        <th>Phòng ban</th>
+                        <th>Thao tác</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="emp : ${employees}">
+                        <td th:text="${emp.employeeCode}"></td>
+                        <td th:text="${emp.fullName}"></td>
+                        <td th:text="${#temporals.format(emp.dob, 'dd-MM-yyyy')}"></td>
+                        <td th:text="${emp.gender}"></td>
+                        <td th:text="${#numbers.formatDecimal(emp.salary, 0, 'COMMA', 0, 'POINT')} + ' VNĐ'"></td>
+                        <td th:text="${emp.department.name}"></td>
+                        <td>
+                            <a th:href="@{/employees/edit/{id}(id=${emp.id})}" class="btn btn-primary btn-sm">Sửa</a>
+                            <a th:href="@{/employees/delete/{id}(id=${emp.id})}" class="btn btn-danger btn-sm"
+                                onclick="return confirm('Xác nhận xóa nhân viên này?')">Xóa</a>
+                        </td>
+                    </tr>
+                    <tr th:if="${#lists.isEmpty(employees)}">
+                        <td colspan="7" style="text-align: center; color: var(--text-muted); padding: 2rem;">Không tìm
+                            thấy nhân viên nào.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+</body>
+
+</html>

@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Danh sách hàng hoá - Công ty ABC</title>
+    <link rel="stylesheet" th:href="@{/style.css}">
+</head>
+
+<body>
+    <div class="container">
+        <h1>Quản lý Hàng hoá Công ty ABC</h1>
+
+        <div th:if="${message}"
+            style="background: #dcfce7; color: #166534; padding: 1rem; border-radius: 0.5rem; margin-bottom: 1rem;">
+            <p th:text="${message}"></p>
+        </div>
+
+        <!-- Tìm kiếm -->
+        <form th:action="@{/products}" method="get" class="search-box">
+            <div>
+                <input type="text" name="name" th:value="${name}" placeholder="Tìm theo tên hàng hoá...">
+            </div>
+            <div>
+                <select name="typeId">
+                    <option value="">-- Tất cả loại hàng hoá --</option>
+                    <option th:each="type : ${productTypes}" th:value="${type.id}" th:text="${type.name}"
+                        th:selected="${type.id == typeId}"></option>
+                </select>
+            </div>
+            <button type="submit" class="btn btn-primary">Tìm kiếm</button>
+            <a th:href="@{/products}" class="btn" style="background: #e5e7eb;">Làm mới</a>
+        </form>
+
+        <div style="text-align: right; margin-bottom: 1rem;">
+            <a th:href="@{/products/create}" class="btn btn-primary">+ Thêm mới sản phẩm</a>
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>STT</th>
+                    <th>Mã hàng</th>
+                    <th>Tên hàng</th>
+                    <th>Đơn vị</th>
+                    <th>Giá (VNĐ)</th>
+                    <th>Loại hàng</th>
+                    <th>Hành động</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="p, status : ${products}">
+                    <td th:text="${status.count}"></td>
+                    <td th:text="${p.id}"></td>
+                    <td th:text="${p.name}"></td>
+                    <td th:text="${p.unit}"></td>
+                    <td th:text="${#numbers.formatDecimal(p.price, 0, 'COMMA', 0, 'POINT')}"></td>
+                    <td th:text="${p.productType.name}"></td>
+                    <td>
+                        <button class="btn btn-danger" th:data-id="${p.id}" th:data-name="${p.name}"
+                            onclick="showDeleteModal(this.getAttribute('data-id'), this.getAttribute('data-name'))">Xoá</button>
+                    </td>
+                </tr>
+                <tr th:if="${products.empty}">
+                    <td colspan="7" style="text-align: center;">Không tìm thấy kết quả nào.</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Modal Xoá -->
+    <div id="deleteModal" class="modal">
+        <div class="modal-content">
+            <h3>Xác nhận xoá</h3>
+            <p id="deleteMessage"></p>
+            <form th:action="@{/products/delete}" method="post">
+                <input type="hidden" name="id" id="deleteId">
+                <div style="display: flex; gap: 1rem; justify-content: flex-end; margin-top: 2rem;">
+                    <button type="button" class="btn" onclick="closeModal()" style="background: #e5e7eb;">Huỷ</button>
+                    <button type="submit" class="btn btn-danger">Xoá</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        /**
+         * Hàm hiển thị Modal xác nhận xoá.
+         * @param id - Mã hàng hoá cần xoá
+         * @param name - Tên hàng hoá để hiển thị trong câu hỏi xác nhận
+         */
+        function showDeleteModal(id, name) {
+            // Gán dữ liệu vào các thẻ HTML trong Modal
+            document.getElementById('deleteId').value = id;
+            document.getElementById('deleteMessage').innerText = 'Bạn có chắc chắn muốn xoá sản phẩm "' + name + '" (' + id + ') không?';
+
+            // Hiển thị Modal bằng cách đổi style display thành flex
+            document.getElementById('deleteModal').style.display = 'flex';
+        }
+
+        /**
+         * Hàm đóng Modal.
+         */
+        function closeModal() {
+            document.getElementById('deleteModal').style.display = 'none';
+        }
+
+        /**
+         * Xử lý đóng modal khi người dùng click vào vùng trống bên ngoài hộp thoại.
+         */
+        window.onclick = function (event) {
+            let modal = document.getElementById('deleteModal');
+            if (event.target == modal) {
+                closeModal();
+            }
+        }
+    </script>
+</body>
+
+</html>
