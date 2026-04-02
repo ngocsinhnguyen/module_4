@@ -1,0 +1,56 @@
+### Custom Configurations ###
+src/main/resources/application.properties
+src/main/resources/application.yml
+*.env
+
+HELP.md
+.gradle
+build/
+!gradle/wrapper/gradle-wrapper.jar
+!**/src/main/**/build/
+!**/src/test/**/build/
+
+### STS ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+bin/
+!**/src/main/**/bin/
+!**/src/test/**/bin/
+
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+out/
+!**/src/main/**/out/
+!**/src/test/**/out/
+
+### NetBeans ###
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+
+### VS Code ###
+.vscode/
+
+# Ignore local properties with secrets
+src/main/resources/application.properties
+
+# IDE and build files
+.idea/
+.gradle/
+build/
+out/
+*.iml
+target/
+
+# Uploads directory
+uploads/

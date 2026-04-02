@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Kafka Chat Moderator</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.5.0/sockjs.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f0f2f5; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        #chat-container { width: 500px; background: white; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); display: flex; flex-direction: column; overflow: hidden; }
+        #header { background: #0084ff; color: white; padding: 15px; text-align: center; font-weight: bold; }
+        #messages { flex-grow: 1; padding: 15px; overflow-y: auto; height: 400px; border-bottom: 1px solid #ddd; }
+        .message { margin-bottom: 10px; padding: 8px 12px; border-radius: 18px; max-width: 80%; }
+        .received { background: #e4e6eb; align-self: flex-start; }
+        .user-input { display: flex; padding: 15px; gap: 10px; }
+        input { flex-grow: 1; padding: 10px; border: 1px solid #ddd; border-radius: 20px; outline: none; }
+        button { background: #0084ff; color: white; border: none; padding: 10px 20px; border-radius: 20px; cursor: pointer; }
+        button:hover { background: #0073e6; }
+        .user-name { font-size: 0.8em; color: #65676b; margin-bottom: 2px; }
+    </style>
+</head>
+<body>
+    <div id="chat-container">
+        <div id="header">
+            REAL-TIME MODERATOR
+            <div id="status" style="font-size: 0.7em; margin-top: 5px; color: #ffeb3b;">Connecting...</div>
+        </div>
+        <div id="messages"></div>
+        <div class="user-input">
+            <input type="text" id="username" placeholder="Tên..." style="width: 80px; flex-grow: 0;">
+            <input type="text" id="content" placeholder="Nhập tin nhắn..." onkeydown="if(event.key==='Enter') sendMessage()">
+            <button onclick="sendMessage()">Gửi</button>
+        </div>
+    </div>
+
+    <script>
+        var stompClient = null;
+        var statusEl = document.getElementById('status');
+
+        function connect() {
+            console.log("Attempting to connect to /ws-chat...");
+            var socket = new SockJS('/ws-chat');
+            stompClient = Stomp.over(socket);
+            stompClient.connect({}, function (frame) {
+                console.log('Connected: ' + frame);
+                statusEl.innerText = "Connected (Online)";
+                statusEl.style.color = "#4caf50";
+                
+                stompClient.subscribe('/topic/messages', function (response) {
+                    console.log("Message received: ", response.body);
+                    showMessage(JSON.parse(response.body));
+                });
+            }, function(error) {
+                console.error("STOMP error: ", error);
+                statusEl.innerText = "Connection Failed! (Check Backend)";
+                statusEl.style.color = "#f44336";
+                setTimeout(connect, 5000);
+            });
+        }
+
+        function sendMessage() {
+            var user = document.getElementById('username').value || "Anonymous";
+            var content = document.getElementById('content').value;
+            if (content.trim() === "") return;
+
+            stompClient.send("/app/send", {}, JSON.stringify({
+                'user': user,
+                'content': content
+            }));
+            document.getElementById('content').value = '';
+        }
+
+        function showMessage(message) {
+            var messagesDiv = document.getElementById('messages');
+            var msgElement = document.createElement('div');
+            
+            var nameElement = document.createElement('div');
+            nameElement.className = 'user-name';
+            nameElement.innerText = message.user;
+            
+            var contentElement = document.createElement('div');
+            contentElement.className = 'message received';
+            contentElement.innerText = message.content;
+            
+            msgElement.appendChild(nameElement);
+            msgElement.appendChild(contentElement);
+            messagesDiv.appendChild(msgElement);
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        }
+
+        connect();
+    </script>
+</body>
+</html>

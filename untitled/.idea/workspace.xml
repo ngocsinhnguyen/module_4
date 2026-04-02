@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="858b2164-097e-42ee-8f31-4d40bdb5e600" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/../C0825G1-app-ticket" beforeDir="false" afterPath="$PROJECT_DIR$/../C0825G1-app-ticket" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="JavaScript File" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 4
+}</component>
+  <component name="ProjectId" id="38upiPnfrGDbixtWLLhLcOTj7xZ" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Node.js.bai1.js.executor": "Run",
+    "Node.js.destructuring_rest_spread.js.executor": "Run",
+    "Node.js.function.js.executor": "Run",
+    "Node.js.merge.js.executor": "Run",
+    "Node.js.rating.js.executor": "Run",
+    "Node.js.rating4.js.executor": "Run",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "git-widget-placeholder": "main",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "C:/Users/Sinh/Module_4/C0825G1-code-arena",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "vue.rearranger.settings.migration": "true"
+  }
+}]]></component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\Sinh\Module_4\untitled\prime_number" />
+    </key>
+  </component>
+  <component name="RunManager" selected="Node.js.rating.js">
+    <configuration name="destructuring_rest_spread.js" type="NodeJSConfigurationType" temporary="true" nameIsGenerated="true" path-to-js-file="$PROJECT_DIR$/bai2/destructuring_rest_spread.js" working-dir="$PROJECT_DIR$/bai2">
+      <method v="2" />
+    </configuration>
+    <configuration name="function.js" type="NodeJSConfigurationType" temporary="true" nameIsGenerated="true" path-to-js-file="$PROJECT_DIR$/bai3/function.js" working-dir="$PROJECT_DIR$/bai3">
+      <method v="2" />
+    </configuration>
+    <configuration name="merge.js" type="NodeJSConfigurationType" temporary="true" nameIsGenerated="true" path-to-js-file="$PROJECT_DIR$/bai6/merge.js" working-dir="$PROJECT_DIR$/bai6">
+      <method v="2" />
+    </configuration>
+    <configuration name="rating4.js" type="NodeJSConfigurationType" temporary="true" nameIsGenerated="true" path-to-js-file="$PROJECT_DIR$/bai5/rating4.js" working-dir="$PROJECT_DIR$/bai5">
+      <method v="2" />
+    </configuration>
+    <configuration name="rating.js" type="NodeJSConfigurationType" temporary="true" nameIsGenerated="true" path-to-js-file="$PROJECT_DIR$/bai4/rating.js" working-dir="$PROJECT_DIR$/bai4">
+      <method v="2" />
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Node.js.rating.js" />
+        <item itemvalue="Node.js.rating4.js" />
+        <item itemvalue="Node.js.merge.js" />
+        <item itemvalue="Node.js.function.js" />
+        <item itemvalue="Node.js.destructuring_rest_spread.js" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-jdk-9823dce3aa75-84258761d1cc-intellij.indexing.shared.core-IU-243.28141.18" />
+        <option value="bundled-js-predefined-d6986cc7102b-1632447f56bf-JavaScript-IU-243.28141.18" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="858b2164-097e-42ee-8f31-4d40bdb5e600" name="Changes" comment="" />
+      <created>1769659438739</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1769659438739</updated>
+      <workItem from="1769659440040" duration="2824000" />
+      <workItem from="1769668508014" duration="5216000" />
+      <workItem from="1769675111796" duration="121000" />
+      <workItem from="1769684500335" duration="23000" />
+      <workItem from="1769735537076" duration="756000" />
+      <workItem from="1769747550516" duration="599000" />
+      <workItem from="1771895225662" duration="8000" />
+      <workItem from="1772033782578" duration="58000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+</project>
