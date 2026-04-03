@@ -21,3 +21,13 @@ services:
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
       KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
       KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+
+  app:
+    build: .
+    image: kafka-moderator:latest
+    ports:
+      - "8080:8080"
+    depends_on:
+      - kafka
+    environment:
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9092
